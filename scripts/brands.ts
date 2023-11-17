@@ -7,7 +7,7 @@ export default async function populateBrands(client: Knex): Promise<number[]> {
 
   await client.raw(`DROP TABLE IF EXISTS "${tableName}" CASCADE`);
 
-  const brandNames = ['beneteau', 'lagoon'];
+  const brandNames = ['Beneteau', 'Lagoon'];
 
   await client.schema.createTable(tableName, table => {
     table.increments('id').primary();
