@@ -3,7 +3,7 @@ import { Knex } from 'knex';
 
 import populate from './utils';
 
-export default async function populateBoats(client: Knex): Promise<number[]> {
+export default async function populateBoats(client: Knex, brandIds: number[]): Promise<number[]> {
   const tableName = 'actus';
 
   await client.raw(`DROP TABLE IF EXISTS "${tableName}" CASCADE`);
@@ -13,11 +13,13 @@ export default async function populateBoats(client: Knex): Promise<number[]> {
     table.string('title');
     table.string('shortText');
     table.string('article');
+    table.integer('brand_id').references('brands.id');
   });
 
   return populate(client, tableName, 10, () => ({
     title: faker.lorem.words(),
     shortText: faker.lorem.sentence(),
     article: faker.lorem.paragraph(),
+    brand_id: faker.helpers.arrayElement(brandIds),
   }));
 }
