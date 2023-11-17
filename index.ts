@@ -16,13 +16,17 @@ const agent = createAgent<Schema>({
   typingsMaxDepth: 5,
 });
 
-agent.addDataSource(
-  createSqlDataSource({
-    uri: process.env.DATABASE_URL,
-    schema: process.env.DATABASE_SCHEMA,
-    sslMode: process.env.DATABASE_SSL_MODE as SslMode,
-  }),
-);
+agent
+  .addDataSource(
+    createSqlDataSource({
+      uri: process.env.DATABASE_URL,
+      schema: process.env.DATABASE_SCHEMA,
+      sslMode: process.env.DATABASE_SSL_MODE as SslMode,
+    }),
+  )
+  .customizeCollection('documents', collection => {
+    collection.importField('brandName', { path: 'boat:brand:name' });
+  });
 
 agent.mountOnStandaloneServer(Number(process.env.PORT));
 

@@ -102,6 +102,7 @@ export type Schema = {
       'boat_id': number;
       'created_at': string;
       'updated_at': string;
+      'brandName': string;
     };
     nested: {
       'boat': Schema['boats']['plain'] & Schema['boats']['nested'];
