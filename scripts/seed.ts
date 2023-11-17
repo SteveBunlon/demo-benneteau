@@ -3,6 +3,7 @@ import 'dotenv/config';
 
 import Knex from 'knex';
 import createBoats from './boats';
+import createDocuments from './documents';
 import createActus from './actus';
 
 const knex = Knex({
@@ -12,7 +13,8 @@ const knex = Knex({
 
 (async () => {
   const boats = await createBoats(knex);
-  await createActus(knex);
+  const documents = await createDocuments(knex, boats);
+  const actus = await createActus(knex);
   console.log('Tables created!');
   await knex.destroy();
 })();

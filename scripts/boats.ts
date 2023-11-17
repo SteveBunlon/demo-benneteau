@@ -23,7 +23,7 @@ export default async function populateBoats(client: Knex): Promise<number[]> {
     table.string('as400_variant');
   });
 
-  return populate(client, tableName, 5000, () => ({
+  return populate(client, tableName, 500, () => ({
     designation: generateDesignation(),
     is_old: faker.datatype.boolean(),
     type: faker.helpers.arrayElement(types),
