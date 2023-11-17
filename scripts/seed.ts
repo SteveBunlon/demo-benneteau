@@ -2,6 +2,7 @@
 import 'dotenv/config';
 
 import Knex from 'knex';
+import createBoats from './boats';
 
 const knex = Knex({
   client: 'pg',
@@ -9,6 +10,7 @@ const knex = Knex({
 });
 
 (async () => {
+  const boats = await createBoats(knex);
   console.log('Tables created!');
   await knex.destroy();
 })();

@@ -1,30 +1,33 @@
-// import { faker } from '@faker-js/faker';
-// import { Knex } from 'knex';
+import { faker } from '@faker-js/faker';
+import { Knex } from 'knex';
 
-// import populate from './utils';
+import populate from './utils';
 
-// export default async function populateAddresses(
-//   client: Knex,
-//   userIds: number[],
-// ): Promise<number[]> {
-//   const tableName = 'addresses';
+function generateDesignation() {
+  return `ANTARES ${faker.number.int({ min: 5, max: 12 })} ${faker.datatype.boolean() ? 'HB' : ''}`;
+}
 
-//   await client.raw(`DROP TABLE IF EXISTS "${tableName}" CASCADE`);
+export default async function populateBoats(client: Knex): Promise<number[]> {
+  const tableName = 'boats';
 
-//   await client.schema.createTable(tableName, table => {
-//     table.increments('id').primary();
-//     table.integer('user_id').references('users.id');
-//     table.string('country');
-//     table.string('city');
-//     table.string('street');
-//     table.string('number');
-//   });
+  await client.raw(`DROP TABLE IF EXISTS "${tableName}" CASCADE`);
 
-//   return populate(client, tableName, 100, () => ({
-//     user_id: faker.helpers.arrayElement(userIds),
-//     street: faker.location.streetAddress(),
-//     number: faker.number.int({ min: 1, max: 100 }),
-//     city: faker.location.city(),
-//     country: faker.location.country(),
-//   }));
-// }
+  const types = ['Hors-board', 'Inboard', 'Jet', 'Voile'];
+
+  await client.schema.createTable(tableName, table => {
+    table.increments('id').primary();
+    table.string('designation');
+    table.boolean('is_old');
+    table.enum('type', types);
+    table.string('as400_model');
+    table.string('as400_variant');
+  });
+
+  return populate(client, tableName, 5000, () => ({
+    designation: generateDesignation(),
+    is_old: faker.datatype.boolean(),
+    type: faker.helpers.arrayElement(types),
+    as400_model: faker.number.int({ min: 60000, max: 65000 }),
+    as400_variant: '004',
+  }));
+}
