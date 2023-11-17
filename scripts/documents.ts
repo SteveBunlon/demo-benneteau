@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Knex } from 'knex';
 
-import populate from './utils';
+import populate, { generateTimestamps } from './utils';
 
 function generateDocumentTitle() {
   return `Document ${faker.lorem.words(3)}`;
@@ -29,6 +29,8 @@ export default async function populateDocuments(
     table.string('reference_code');
     table.string('file_url');
     table.integer('boat_id').references('boats.id');
+    table.date('created_at');
+    table.date('updated_at');
   });
 
   return populate(client, tableName, 2000, () => ({
@@ -37,7 +39,8 @@ export default async function populateDocuments(
     creation_date: faker.date.past({ years: 10, refDate: '2021-01-01' }),
     is_confidential: faker.datatype.boolean(),
     reference_code: `DOC-${faker.string.alphanumeric(10).toUpperCase()}`,
-    file_url: 'https://picsum.photos/200/300.png',
+    file_url: 'https://picsum.photos/200/300.jpg',
     boat_id: faker.helpers.arrayElement(boatIds),
+    ...generateTimestamps(),
   }));
 }

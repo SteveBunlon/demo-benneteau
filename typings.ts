@@ -42,9 +42,11 @@ export type Schema = {
     plain: {
       'id': number;
       'title': string;
-      'shortText': string;
+      'short_text': string;
       'article': string;
       'brand_id': number;
+      'created_at': string;
+      'updated_at': string;
     };
     nested: {
       'brand': Schema['brands']['plain'] & Schema['brands']['nested'];
@@ -52,6 +54,8 @@ export type Schema = {
     flat: {
       'brand:id': number;
       'brand:name': string;
+      'brand:created_at': string;
+      'brand:updated_at': string;
     };
   };
   'boats': {
@@ -63,6 +67,8 @@ export type Schema = {
       'as400_model': string;
       'as400_variant': string;
       'brand_id': number;
+      'created_at': string;
+      'updated_at': string;
     };
     nested: {
       'brand': Schema['brands']['plain'] & Schema['brands']['nested'];
@@ -70,12 +76,16 @@ export type Schema = {
     flat: {
       'brand:id': number;
       'brand:name': string;
+      'brand:created_at': string;
+      'brand:updated_at': string;
     };
   };
   'brands': {
     plain: {
       'id': number;
       'name': string;
+      'created_at': string;
+      'updated_at': string;
     };
     nested: {};
     flat: {};
@@ -90,6 +100,8 @@ export type Schema = {
       'reference_code': string;
       'file_url': string;
       'boat_id': number;
+      'created_at': string;
+      'updated_at': string;
     };
     nested: {
       'boat': Schema['boats']['plain'] & Schema['boats']['nested'];
@@ -102,8 +114,12 @@ export type Schema = {
       'boat:as400_model': string;
       'boat:as400_variant': string;
       'boat:brand_id': number;
+      'boat:created_at': string;
+      'boat:updated_at': string;
       'boat:brand:id': number;
       'boat:brand:name': string;
+      'boat:brand:created_at': string;
+      'boat:brand:updated_at': string;
     };
   };
 };

@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-import populate from './utils';
+import populate, { generateTimestamps } from './utils';
 
 export default async function populateBrands(client: Knex): Promise<number[]> {
   const tableName = 'brands';
@@ -12,9 +12,12 @@ export default async function populateBrands(client: Knex): Promise<number[]> {
   await client.schema.createTable(tableName, table => {
     table.increments('id').primary();
     table.string('name');
+    table.date('created_at');
+    table.date('updated_at');
   });
 
   return populate(client, tableName, brandNames.length, index => ({
     name: brandNames[index],
+    ...generateTimestamps(),
   }));
 }

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Knex } from 'knex';
 
-import populate from './utils';
+import populate, { generateTimestamps } from './utils';
 
 function generateDesignation() {
   return `ANTARES ${faker.number.int({ min: 5, max: 12 })} ${faker.datatype.boolean() ? 'HB' : ''}`;
@@ -22,6 +22,8 @@ export default async function populateBoats(client: Knex, brandIds: number[]): P
     table.string('as400_model');
     table.string('as400_variant');
     table.integer('brand_id').references('brands.id');
+    table.date('created_at');
+    table.date('updated_at');
   });
 
   return populate(client, tableName, 500, () => ({
@@ -31,5 +33,6 @@ export default async function populateBoats(client: Knex, brandIds: number[]): P
     as400_model: faker.number.int({ min: 60000, max: 65000 }),
     as400_variant: '004',
     brand_id: faker.helpers.arrayElement(brandIds),
+    ...generateTimestamps(),
   }));
 }
