@@ -24,7 +24,7 @@ agent.addDataSource(
   }),
 );
 
-agent.mountOnStandaloneServer(Number(process.env.APPLICATION_PORT));
+agent.mountOnStandaloneServer(Number(process.env.PORT));
 
 agent.start().catch(error => {
   // eslint-disable-next-line no-console
