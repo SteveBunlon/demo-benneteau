@@ -128,7 +128,32 @@
       "segments": []
     },
     {
-      "actions": [],
+      "actions": [
+        {
+          "id": "boats-0-mark-as-new",
+          "name": "mark as new",
+          "type": "bulk",
+          "baseUrl": null,
+          "endpoint": "/forest/_actions/boats/0/mark-as-new",
+          "httpMethod": "POST",
+          "redirect": null,
+          "download": false,
+          "fields": [],
+          "hooks": {"load": false, "change": ["changeHook"]}
+        },
+        {
+          "id": "boats-1-mark-as-old",
+          "name": "mark as old",
+          "type": "bulk",
+          "baseUrl": null,
+          "endpoint": "/forest/_actions/boats/1/mark-as-old",
+          "httpMethod": "POST",
+          "redirect": null,
+          "download": false,
+          "fields": [],
+          "hooks": {"load": false, "change": ["changeHook"]}
+        }
+      ],
       "fields": [
         {
           "defaultValue": null,

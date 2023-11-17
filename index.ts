@@ -26,6 +26,29 @@ agent
   )
   .customizeCollection('documents', collection => {
     collection.importField('brandName', { path: 'boat:brand:name' });
+  })
+  .customizeCollection('boats', collection => {
+    collection
+      .addAction('mark as new', {
+        scope: 'Bulk',
+        execute: async context => {
+          const ids = await context.getRecordIds();
+          context.collection.update(
+            { conditionTree: { field: 'id', operator: 'In', value: ids } },
+            { is_old: false },
+          );
+        },
+      })
+      .addAction('mark as old', {
+        scope: 'Bulk',
+        execute: async context => {
+          const ids = await context.getRecordIds();
+          context.collection.update(
+            { conditionTree: { field: 'id', operator: 'In', value: ids } },
+            { is_old: true },
+          );
+        },
+      });
   });
 
 agent.mountOnStandaloneServer(Number(process.env.PORT));
