@@ -49,6 +49,29 @@ agent
           );
         },
       });
+  })
+  .customizeCollection('actus', collection => {
+    collection
+      .addAction('publish', {
+        scope: 'Bulk',
+        execute: async context => {
+          const ids = await context.getRecordIds();
+          context.collection.update(
+            { conditionTree: { field: 'id', operator: 'In', value: ids } },
+            { is_published: false },
+          );
+        },
+      })
+      .addAction('unpublish', {
+        scope: 'Bulk',
+        execute: async context => {
+          const ids = await context.getRecordIds();
+          context.collection.update(
+            { conditionTree: { field: 'id', operator: 'In', value: ids } },
+            { is_published: true },
+          );
+        },
+      });
   });
 
 agent.mountOnStandaloneServer(Number(process.env.PORT));

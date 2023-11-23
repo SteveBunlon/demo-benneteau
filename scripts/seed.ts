@@ -16,7 +16,7 @@ const knex = Knex({
   const brands = await createBrands(knex);
   const boats = await createBoats(knex, brands);
   const documents = await createDocuments(knex, boats);
-  const actus = await createActus(knex, brands);
+  const actus = await createActus(knex, boats);
   console.log('Tables created!');
   await knex.destroy();
 })();

@@ -3,7 +3,7 @@ import { Knex } from 'knex';
 
 import populate, { generateTimestamps } from './utils';
 
-export default async function populateBoats(client: Knex, brandIds: number[]): Promise<number[]> {
+export default async function populateBoats(client: Knex, boatsId: number[]): Promise<number[]> {
   const tableName = 'actus';
 
   await client.raw(`DROP TABLE IF EXISTS "${tableName}" CASCADE`);
@@ -13,16 +13,25 @@ export default async function populateBoats(client: Knex, brandIds: number[]): P
     table.string('title');
     table.string('short_text');
     table.string('article');
-    table.integer('brand_id').references('brands.id');
+    table.integer('boat_id').references('boats.id');
+    table.boolean('is_published');
+    table.integer('order');
     table.date('created_at');
     table.date('updated_at');
   });
 
-  return populate(client, tableName, 10, () => ({
-    title: faker.lorem.words(),
-    short_text: faker.lorem.sentence(),
-    article: faker.lorem.paragraph(),
-    brand_id: faker.helpers.arrayElement(brandIds),
-    ...generateTimestamps(),
-  }));
+  let i = 0;
+
+  return populate(client, tableName, 50, () => {
+    i += 1;
+    return {
+      title: faker.lorem.words(),
+      short_text: faker.lorem.sentence(),
+      article: faker.lorem.paragraph(),
+      boat_id: faker.helpers.arrayElement(boatsId),
+      is_published: faker.datatype.boolean(),
+      order: i,
+      ...generateTimestamps(),
+    };
+  });
 }

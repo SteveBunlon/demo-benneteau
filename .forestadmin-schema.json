@@ -1,7 +1,32 @@
 {
   "collections": [
     {
-      "actions": [],
+      "actions": [
+        {
+          "id": "actus-0-publish",
+          "name": "publish",
+          "type": "bulk",
+          "baseUrl": null,
+          "endpoint": "/forest/_actions/actus/0/publish",
+          "httpMethod": "POST",
+          "redirect": null,
+          "download": false,
+          "fields": [],
+          "hooks": {"load": false, "change": ["changeHook"]}
+        },
+        {
+          "id": "actus-1-unpublish",
+          "name": "unpublish",
+          "type": "bulk",
+          "baseUrl": null,
+          "endpoint": "/forest/_actions/actus/1/unpublish",
+          "httpMethod": "POST",
+          "redirect": null,
+          "download": false,
+          "fields": [],
+          "hooks": {"load": false, "change": ["changeHook"]}
+        }
+      ],
       "fields": [
         {
           "defaultValue": null,
@@ -22,7 +47,7 @@
         {
           "defaultValue": null,
           "enums": null,
-          "field": "brand",
+          "field": "boat",
           "integration": null,
           "inverseOf": "actuses",
           "isFilterable": true,
@@ -31,7 +56,7 @@
           "isRequired": false,
           "isSortable": true,
           "isVirtual": false,
-          "reference": "brands.id",
+          "reference": "boats.id",
           "relationship": "BelongsTo",
           "type": "Number",
           "validations": []
@@ -61,6 +86,38 @@
           "isFilterable": true,
           "isPrimaryKey": true,
           "isReadOnly": true,
+          "isRequired": false,
+          "isSortable": true,
+          "isVirtual": false,
+          "reference": null,
+          "type": "Number",
+          "validations": []
+        },
+        {
+          "defaultValue": null,
+          "enums": [],
+          "field": "is_published",
+          "integration": null,
+          "inverseOf": null,
+          "isFilterable": true,
+          "isPrimaryKey": false,
+          "isReadOnly": false,
+          "isRequired": false,
+          "isSortable": true,
+          "isVirtual": false,
+          "reference": null,
+          "type": "Boolean",
+          "validations": []
+        },
+        {
+          "defaultValue": null,
+          "enums": [],
+          "field": "order",
+          "integration": null,
+          "inverseOf": null,
+          "isFilterable": true,
+          "isPrimaryKey": false,
+          "isReadOnly": false,
           "isRequired": false,
           "isSortable": true,
           "isVirtual": false,
@@ -155,6 +212,23 @@
         }
       ],
       "fields": [
+        {
+          "defaultValue": null,
+          "enums": null,
+          "field": "actuses",
+          "integration": null,
+          "inverseOf": "boat",
+          "isFilterable": false,
+          "isPrimaryKey": false,
+          "isReadOnly": false,
+          "isRequired": false,
+          "isSortable": true,
+          "isVirtual": false,
+          "reference": "actus.id",
+          "relationship": "HasMany",
+          "type": ["Number"],
+          "validations": []
+        },
         {
           "defaultValue": null,
           "enums": [],
@@ -331,23 +405,6 @@
     {
       "actions": [],
       "fields": [
-        {
-          "defaultValue": null,
-          "enums": null,
-          "field": "actuses",
-          "integration": null,
-          "inverseOf": "brand",
-          "isFilterable": false,
-          "isPrimaryKey": false,
-          "isReadOnly": false,
-          "isRequired": false,
-          "isSortable": true,
-          "isVirtual": false,
-          "reference": "actus.id",
-          "relationship": "HasMany",
-          "type": ["Number"],
-          "validations": []
-        },
         {
           "defaultValue": null,
           "enums": null,
