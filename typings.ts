@@ -63,6 +63,7 @@ export type Schema = {
       'boat:brand_id': number;
       'boat:created_at': string;
       'boat:updated_at': string;
+      'boat:boat_image_path': string;
       'boat:brand:id': number;
       'boat:brand:name': string;
       'boat:brand:created_at': string;
@@ -80,6 +81,7 @@ export type Schema = {
       'brand_id': number;
       'created_at': string;
       'updated_at': string;
+      'boat_image_path': string;
     };
     nested: {
       'brand': Schema['brands']['plain'] & Schema['brands']['nested'];
@@ -128,6 +130,7 @@ export type Schema = {
       'boat:brand_id': number;
       'boat:created_at': string;
       'boat:updated_at': string;
+      'boat:boat_image_path': string;
       'boat:brand:id': number;
       'boat:brand:name': string;
       'boat:brand:created_at': string;
