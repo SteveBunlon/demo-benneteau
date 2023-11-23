@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { createAgent } from '@forestadmin/agent';
 import { createSqlDataSource } from '@forestadmin/datasource-sql';
 
-import type { Schema } from './typings';
+import type { NotificationsRecord, Schema, UserNotificationsRecord } from './typings';
 
 const agent = createAgent<Schema>({
   authSecret: process.env.FOREST_AUTH_SECRET!,
@@ -29,7 +29,7 @@ agent
   })
   .customizeCollection('boats', collection => {
     collection
-      .addAction('mark as new', {
+      .addAction('Mark as new', {
         scope: 'Bulk',
         execute: async context => {
           const ids = await context.getRecordIds();
@@ -39,7 +39,7 @@ agent
           );
         },
       })
-      .addAction('mark as old', {
+      .addAction('Mark as old', {
         scope: 'Bulk',
         execute: async context => {
           const ids = await context.getRecordIds();
@@ -52,7 +52,7 @@ agent
   })
   .customizeCollection('actus', collection => {
     collection
-      .addAction('publish', {
+      .addAction('Publish', {
         scope: 'Bulk',
         execute: async context => {
           const ids = await context.getRecordIds();
@@ -62,7 +62,7 @@ agent
           );
         },
       })
-      .addAction('unpublish', {
+      .addAction('Unpublish', {
         scope: 'Bulk',
         execute: async context => {
           const ids = await context.getRecordIds();
@@ -70,6 +70,105 @@ agent
             { conditionTree: { field: 'id', operator: 'In', value: ids } },
             { is_published: true },
           );
+        },
+      });
+  })
+  .customizeCollection('notifications', collection => {
+    collection
+      .addAction('Mark as live', {
+        scope: 'Bulk',
+        execute: async context => {
+          const ids = await context.getRecordIds();
+          context.collection.update(
+            { conditionTree: { field: 'id', operator: 'In', value: ids } },
+            { is_live: true },
+          );
+        },
+      })
+      .addAction('Mark as not live', {
+        scope: 'Bulk',
+        execute: async context => {
+          const ids = await context.getRecordIds();
+          context.collection.update(
+            { conditionTree: { field: 'id', operator: 'In', value: ids } },
+            { is_live: false },
+          );
+        },
+      })
+      .addAction('Push notification to brands', {
+        scope: 'Global',
+        form: [
+          {
+            label: 'Title',
+            type: 'String',
+            isRequired: true,
+          },
+          {
+            label: 'Description',
+            type: 'String',
+            widget: 'RichText',
+            isRequired: true,
+          },
+          {
+            label: 'Type',
+            type: 'Enum',
+            enumValues: ['📅', '📨', '📍', '✨', '🕰️'],
+            isRequired: true,
+          },
+          {
+            label: 'Brands',
+            type: 'StringList',
+            widget: 'Dropdown',
+            isRequired: true,
+            options: async context => {
+              const brands = await context.dataSource
+                .getCollection('brands')
+                .list({}, ['id', 'name']);
+              return brands.map(brand => ({ label: brand.name, value: `${brand.id}` }));
+            },
+          },
+        ],
+        execute: async (context, resultbuilder) => {
+          const brandIds = context.formValues.Brands;
+          const users = await context.dataSource
+            .getCollection('users')
+            .list({ conditionTree: { field: 'brand_id', operator: 'In', value: brandIds } }, [
+              'id',
+              'brand_id',
+            ]);
+
+          const notificationsToCreate = brandIds.map(
+            brandId =>
+              ({
+                brand_id: brandId,
+                description: context.formValues.Description,
+                title: context.formValues.Title,
+                type: context.formValues.Type,
+                is_live: true,
+                created_at: new Date().toDateString(),
+                updated_at: new Date().toDateString(),
+              }) as NotificationsRecord,
+          );
+
+          const notifications = await context.collection.create(notificationsToCreate);
+
+          const userNotificationsToCreate = notifications
+            .map(notification => {
+              const concernedUsers = users.filter(user => user.brand_id === notification.brand_id);
+
+              return concernedUsers.map(user => ({
+                is_read: false,
+                notification_id: notification.id,
+                user_id: user.id,
+              })) as UserNotificationsRecord[];
+            })
+            .flat();
+
+          await context.dataSource
+            .getCollection('user-notifications')
+            .create(userNotificationsToCreate);
+
+          return resultbuilder.success(`Notification pushed to ${users.length} user(s)`);
         },
       });
   });

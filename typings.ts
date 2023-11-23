@@ -36,6 +36,27 @@ export type DocumentsFilter = TPaginatedFilter<Schema, 'documents'>;
 export type DocumentsSortClause = TSortClause<Schema, 'documents'>;
 export type DocumentsAggregation = TAggregation<Schema, 'documents'>;
 
+export type NotificationsCustomizer = CollectionCustomizer<Schema, 'notifications'>;
+export type NotificationsRecord = TPartialRow<Schema, 'notifications'>;
+export type NotificationsConditionTree = TConditionTree<Schema, 'notifications'>;
+export type NotificationsFilter = TPaginatedFilter<Schema, 'notifications'>;
+export type NotificationsSortClause = TSortClause<Schema, 'notifications'>;
+export type NotificationsAggregation = TAggregation<Schema, 'notifications'>;
+
+export type UserNotificationsCustomizer = CollectionCustomizer<Schema, 'user-notifications'>;
+export type UserNotificationsRecord = TPartialRow<Schema, 'user-notifications'>;
+export type UserNotificationsConditionTree = TConditionTree<Schema, 'user-notifications'>;
+export type UserNotificationsFilter = TPaginatedFilter<Schema, 'user-notifications'>;
+export type UserNotificationsSortClause = TSortClause<Schema, 'user-notifications'>;
+export type UserNotificationsAggregation = TAggregation<Schema, 'user-notifications'>;
+
+export type UsersCustomizer = CollectionCustomizer<Schema, 'users'>;
+export type UsersRecord = TPartialRow<Schema, 'users'>;
+export type UsersConditionTree = TConditionTree<Schema, 'users'>;
+export type UsersFilter = TPaginatedFilter<Schema, 'users'>;
+export type UsersSortClause = TSortClause<Schema, 'users'>;
+export type UsersAggregation = TAggregation<Schema, 'users'>;
+
 
 export type Schema = {
   'actus': {
@@ -135,6 +156,80 @@ export type Schema = {
       'boat:brand:name': string;
       'boat:brand:created_at': string;
       'boat:brand:updated_at': string;
+    };
+  };
+  'notifications': {
+    plain: {
+      'id': number;
+      'title': string;
+      'description': string;
+      'brand_id': number;
+      'is_live': boolean;
+      'type': string;
+      'created_at': string;
+      'updated_at': string;
+    };
+    nested: {
+      'brand': Schema['brands']['plain'] & Schema['brands']['nested'];
+    };
+    flat: {
+      'brand:id': number;
+      'brand:name': string;
+      'brand:created_at': string;
+      'brand:updated_at': string;
+    };
+  };
+  'user-notifications': {
+    plain: {
+      'id': number;
+      'user_id': number;
+      'notification_id': number;
+      'is_read': boolean;
+    };
+    nested: {
+      'user': Schema['users']['plain'] & Schema['users']['nested'];
+      'notification': Schema['notifications']['plain'] & Schema['notifications']['nested'];
+    };
+    flat: {
+      'user:id': number;
+      'user:name': string;
+      'user:birth_date': string;
+      'user:is_blocked': boolean;
+      'user:brand_id': number;
+      'notification:id': number;
+      'notification:title': string;
+      'notification:description': string;
+      'notification:brand_id': number;
+      'notification:is_live': boolean;
+      'notification:type': string;
+      'notification:created_at': string;
+      'notification:updated_at': string;
+      'user:brand:id': number;
+      'user:brand:name': string;
+      'user:brand:created_at': string;
+      'user:brand:updated_at': string;
+      'notification:brand:id': number;
+      'notification:brand:name': string;
+      'notification:brand:created_at': string;
+      'notification:brand:updated_at': string;
+    };
+  };
+  'users': {
+    plain: {
+      'id': number;
+      'name': string;
+      'birth_date': string;
+      'is_blocked': boolean;
+      'brand_id': number;
+    };
+    nested: {
+      'brand': Schema['brands']['plain'] & Schema['brands']['nested'];
+    };
+    flat: {
+      'brand:id': number;
+      'brand:name': string;
+      'brand:created_at': string;
+      'brand:updated_at': string;
     };
   };
 };

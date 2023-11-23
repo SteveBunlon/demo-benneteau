@@ -6,6 +6,9 @@ import createBoats from './boats';
 import createDocuments from './documents';
 import createActus from './actus';
 import createBrands from './brands';
+import createUsers from './users';
+import createNotifications from './notifications';
+import createUserNotifications from './user-notifications';
 
 const knex = Knex({
   client: 'pg',
@@ -17,6 +20,9 @@ const knex = Knex({
   const boats = await createBoats(knex, brands);
   const documents = await createDocuments(knex, boats);
   const actus = await createActus(knex, boats);
+  const users = await createUsers(knex, brands);
+  const notifications = await createNotifications(knex, brands);
+  const userNotifications = await createUserNotifications(knex, users, notifications);
   console.log('Tables created!');
   await knex.destroy();
 })();
